@@ -1,5 +1,3 @@
-use std::fmt::{Display, Formatter};
-
 // #[derive(Debug)]
 // enum IpAddrType {
 //     IPV4(String),
