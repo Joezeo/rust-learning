@@ -1,10 +1,24 @@
 use std::collections::HashMap;
 use collection::problem;
+use collection::problem::problem3;
 
 fn main() {
     demo();
     problem::problem1();
     problem::problem2();
+
+    problem3::insert("Joe", problem3::LEARNING_GROUP);
+    problem3::insert("Marry", problem3::FOOD_GROUP);
+    problem3::insert("Jack", problem3::MUSIC_GROUP);
+    problem3::insert("Dan", problem3::MUSIC_GROUP);
+
+    println!("---\nproblem 3 :");
+    println!("Music group has people: {:?}", match problem3::get_group_member(problem3::MUSIC_GROUP) {
+        Some(gp) => gp,
+        None => Vec::new()
+    });
+
+    println!("Joe was in group {}", problem3::get_group("Joe"));
 }
 
 fn demo() {
