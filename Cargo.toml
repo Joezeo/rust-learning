@@ -1,0 +1,20 @@
+[workspace]
+
+members = [
+    "adder",
+    "closure",
+    "collection",
+    "generic",
+    "iter",
+    "lifetime",
+    "minigrep",
+    "ownership",
+    "panic",
+    "pointer",
+    "rectangles",
+    "renum",
+    "restaurant",
+    "rstruct",
+    "rtrait",
+    "variable"
+]
