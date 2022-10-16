@@ -9,7 +9,10 @@ enum List {
 
 #[cfg(test)]
 mod tests {
+    use std::cell::Cell;
+
     use crate::rc_refcell::List::Cons;
+
     use super::*;
 
     #[test]
@@ -25,5 +28,25 @@ mod tests {
         println!("{:?}", a);
         println!("{:?}", b);
         println!("{:?}", c);
+    }
+
+    #[test]
+    fn test_cell() {
+        let c = Cell::new("Hello");
+        let v1 = c.get();
+        c.set("World!");
+        let v2 = c.get();
+        println!("{} {}", v1, v2);
+        assert_eq!(v1, "Hello");
+        assert_eq!(v2, "World!");
+    }
+
+    #[test]
+    fn test_refcell_change() {
+        let a = Rc::new(RefCell::new("Hello ".to_string()));
+        let b = Rc::clone(&a);
+        let c = Rc::clone(&b);
+        c.borrow_mut().push_str("World!");
+        println!("{:?}, {:?}, {:?}", a, b, c)
     }
 }
