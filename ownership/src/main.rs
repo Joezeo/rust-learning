@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use std::ops::Add;
 
 fn main() {
@@ -19,7 +20,7 @@ fn main() {
     no_dangle();
 
     // 切片 slice
-    let mut s = String::from("Hello World");
+    let s = String::from("Hello World");
     let hello = &s[..5];
     let world = &s[6..11];
     println!("{}", hello);

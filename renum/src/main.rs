@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 // #[derive(Debug)]
 // enum IpAddrType {
 //     IPV4(String),
@@ -73,6 +74,7 @@ fn main() {
 
     Coin::Quarter(UsState::Alabama).value_in_coin();
     some_number = plus_one(some_number);
+    println!("{:#?}", some_number);
 
     let u8_value = 0u8;
     match u8_value {

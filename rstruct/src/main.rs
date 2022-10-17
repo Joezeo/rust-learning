@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 struct User {
     username: String,
     email: String,
@@ -21,16 +22,16 @@ fn main() {
     let pu = &mut user;
     pu.active = true;
 
-    let user2 = build_user(String::from("someone"), String::from("someone@gmail.com"));
+    let _user2 = build_user(String::from("someone"), String::from("someone@gmail.com"));
 
-    let user3 = User {
+    let _user3 = User {
         username: String::from("someone3"),
         email: String::from("someone3@gmail.com"),
         ..user
     };
 
     let black = Color(0, 0, 0);
-    let origin = Point(0, 0, 0);
+    let _origin = Point(0, 0, 0);
     println!("Color {}, {}, {}", black.0, black.1, black.2);
 }
 

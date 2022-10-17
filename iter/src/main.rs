@@ -36,7 +36,7 @@ struct Shoe {
     style: String,
 }
 
-fn shoes_in_my_size(shoes: Vec<Shoe>, shoe_size: u32) -> Vec<Shoe> {
+fn _shoes_in_my_size(shoes: Vec<Shoe>, shoe_size: u32) -> Vec<Shoe> {
     shoes.into_iter()
         .filter(|s| s.size == shoe_size)
         .collect()
@@ -50,7 +50,7 @@ fn test_filters_by_size() {
         Shoe { size: 10, style: "boot".to_string() },
     ];
 
-    let filter_shoes = shoes_in_my_size(shoes, 10);
+    let filter_shoes = _shoes_in_my_size(shoes, 10);
     assert_eq!(vec![
         Shoe { size: 10, style: "sneaker".to_string() },
         Shoe { size: 10, style: "boot".to_string() },
@@ -62,7 +62,7 @@ struct Counter {
 }
 
 impl Counter {
-    fn new() -> Counter {
+    fn _new() -> Counter {
         Counter { count: 0 }
     }
 }
@@ -83,7 +83,7 @@ impl Iterator for Counter {
 
 #[test]
 fn test_counter() {
-    let mut counter = Counter::new();
+    let mut counter = Counter::_new();
     assert_eq!(counter.next(), Some(1));
     assert_eq!(counter.next(), Some(2));
     assert_eq!(counter.next(), Some(3));
@@ -94,8 +94,8 @@ fn test_counter() {
 
 #[test]
 fn tet_counter_other_methods() {
-    let sum: u32 = Counter::new()
-        .zip(Counter::new().skip(1))
+    let sum: u32 = Counter::_new()
+        .zip(Counter::_new().skip(1))
         .map(|(a, b)| a * b)
         .filter(|x| x % 3 == 0)
         .sum();

@@ -24,7 +24,7 @@ struct Point<T> {
 }
 
 impl<T> Point<T> {
-    fn x(&self) -> &T {
+    fn _x(&self) -> &T {
         &self.x
     }
 }
