@@ -1,35 +1,37 @@
-use std::thread;
-use std::time::Duration;
-
 fn main() {
-    let v = vec![1, 2, 3];
-    let handel = thread::spawn(move || {
-        println!("vec from outter: {:?}", v);
-        for i in 1..10 {
-            println!("hi number: {:?} from the spawn thread.", i);
-            thread::sleep(Duration::from_millis(1));
-        }
-    });
-
-    // join() 让当前线程等待handel所代表的线程结束
-    handel.join().unwrap();
-
-    for i in 1..5 {
-        println!("hi number: {:?} from the main thread.", i);
-        thread::sleep(Duration::from_millis(1));
-    }
+    println!("Concurrency of Rust.")
 }
 
 #[cfg(test)]
 mod tests {
     use std::{
-        cell::{RefCell, Cell},
-        sync::{Arc, Barrier},
+        cell::{Cell, RefCell},
+        sync::{Arc, Barrier, Condvar, Mutex, Once},
         thread,
         time::Duration,
     };
 
     use thread_local::ThreadLocal;
+
+    #[test]
+    fn test_0() {
+        let v = vec![1, 2, 3];
+        let handel = thread::spawn(move || {
+            println!("vec from outter: {:?}", v);
+            for i in 1..10 {
+                println!("hi number: {:?} from the spawn thread.", i);
+                thread::sleep(Duration::from_millis(1));
+            }
+        });
+
+        // join() 让当前线程等待handel所代表的线程结束
+        handel.join().unwrap();
+
+        for i in 1..5 {
+            println!("hi number: {:?} from the main thread.", i);
+            thread::sleep(Duration::from_millis(1));
+        }
+    }
 
     #[test]
     fn test_1() {
@@ -57,6 +59,7 @@ mod tests {
 
     #[test]
     fn test_3() {
+        // 线程屏障，类似于Java中的CountDownLatch
         let mut handles = Vec::with_capacity(6);
         let ba = Arc::new(Barrier::new(6));
         for _ in 0..6 {
@@ -101,26 +104,78 @@ mod tests {
     impl FOO {
         thread_local!(static FOO: RefCell<u32> = RefCell::new(1));
     }
-    #[test] 
+    #[test]
     fn test_5() {
         FOO::FOO.with(|f| *f.borrow_mut() = 2);
     }
 
     #[test]
-    fn test_third_thread_local() {
+    fn test_6() {
         let tls = Arc::new(ThreadLocal::new());
 
         for _ in 0..5 {
             let t = Arc::clone(&tls);
             thread::spawn(move || {
+                // 每个线程持有值的一份独立拷贝
                 let cell = t.get_or(|| Cell::new(0));
                 cell.set(cell.get() + 1);
-            }).join().unwrap();
+            })
+            .join()
+            .unwrap();
         }
 
         let ts = Arc::try_unwrap(tls).unwrap();
         let total = ts.into_iter().fold(0, |x, y| x + y.get());
 
         assert_eq!(total, 5);
+    }
+
+    #[test]
+    fn test_7() {
+        // 用条件控制线程的挂起和执行
+        let pair = Arc::new((Mutex::new(false), Condvar::new()));
+        let pair2 = pair.clone();
+
+        thread::spawn(move || {
+            let &(ref lock, ref cvar) = &*pair2;
+            let mut started = lock.lock().unwrap();
+            println!("changing started");
+            *started = true;
+            cvar.notify_one();
+        });
+
+        let &(ref lock, ref cvar) = &*pair;
+        let mut started = lock.lock().unwrap();
+        while !*started {
+            started = cvar.wait(started).unwrap();
+        }
+
+        println!("started changed.")
+    }
+
+    static mut VAL: usize = 0;
+    static INIT: Once = Once::new();
+
+    #[test]
+    fn test_8() {
+        // 只能调用一次的函数
+        let handle1 = thread::spawn(move || {
+            INIT.call_once(|| unsafe {
+                VAL = 1;
+            });
+        });
+
+        let handle2 = thread::spawn(move || {
+            INIT.call_once(|| unsafe {
+                VAL = 2;
+            });
+        });
+
+        handle1.join().unwrap();
+        handle2.join().unwrap();
+
+        println!("{}", unsafe { VAL });
+        // VAL 的值是1或2，取决于哪一个线程先执行，无法确定
+        assert!(unsafe { VAL == 1 || VAL == 2 })
     }
 }
