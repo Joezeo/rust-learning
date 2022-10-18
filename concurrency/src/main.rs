@@ -6,7 +6,7 @@ fn main() {
 mod tests {
     use std::{
         cell::{Cell, RefCell},
-        sync::{Arc, Barrier, Condvar, Mutex, Once},
+        sync::{mpsc, Arc, Barrier, Condvar, Mutex, Once},
         thread,
         time::Duration,
     };
@@ -177,5 +177,41 @@ mod tests {
         println!("{}", unsafe { VAL });
         // VAL 的值是1或2，取决于哪一个线程先执行，无法确定
         assert!(unsafe { VAL == 1 || VAL == 2 })
+    }
+
+    #[test]
+    fn test_9() {
+        let (tx, rx) = mpsc::channel();
+
+        let tx1 = tx.clone();
+        thread::spawn(move || {
+            let vals = vec![
+                "hi".to_string(),
+                "from".to_string(),
+                "the".to_string(),
+                "thread".to_string(),
+            ];
+            for val in vals {
+                tx1.send(val).unwrap();
+                thread::sleep(Duration::from_secs(1));
+            }
+        });
+
+        thread::spawn(move || {
+            let vals = vec![
+                "hi".to_string(),
+                "from".to_string(),
+                "the".to_string(),
+                "thread".to_string(),
+            ];
+            for val in vals {
+                tx.send(val).unwrap();
+                thread::sleep(Duration::from_secs(1));
+            }
+        });
+
+        for received in rx {
+            println!("{:?}", received)
+        }
     }
 }
