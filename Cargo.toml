@@ -16,5 +16,6 @@ members = [
     "restaurant",
     "rstruct",
     "rtrait",
-    "variable"
+    "variable",
+    "marcos"
 ]
