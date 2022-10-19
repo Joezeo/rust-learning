@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 pub trait Message {
     fn send(&self, msg: &str);
 }
