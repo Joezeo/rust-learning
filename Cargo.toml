@@ -17,5 +17,6 @@ members = [
     "rstruct",
     "rtrait",
     "variable",
-    "marcos"
+    "marcos",
+    "oop"
 ]

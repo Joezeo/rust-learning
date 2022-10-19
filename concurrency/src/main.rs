@@ -214,4 +214,33 @@ mod tests {
             println!("{:?}", received)
         }
     }
+
+    #[test]
+    fn test10() {
+        let m = Mutex::new(5);
+        {
+            let mut m = m.lock().unwrap();
+            *m = 6;
+        }
+        println!("m = {:?}", m);
+    }
+
+    #[test]
+    fn test_11() {
+        let counter = Arc::new(Mutex::new(0));
+        let mut handles = vec![];
+        for _ in 0..10 {
+            let counter = Arc::clone(&counter);
+            handles.push(thread::spawn(move || {
+                let mut mg = counter.lock().unwrap();
+                *mg += 1;
+            }));
+        }
+
+        for handle in handles {
+            handle.join().unwrap();
+        }
+
+        println!("Result is {}", counter.lock().unwrap())
+    }
 }
