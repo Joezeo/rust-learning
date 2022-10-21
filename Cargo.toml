@@ -18,5 +18,6 @@ members = [
     "rtrait",
     "variable",
     "marcos",
-    "oop"
+    "oop",
+    "pattern"
 ]

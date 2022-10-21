@@ -69,6 +69,10 @@ name = "panic"
 version = "0.1.0"
 
 [[package]]
+name = "pattern"
+version = "0.1.0"
+
+[[package]]
 name = "pointer"
 version = "0.1.0"
 
