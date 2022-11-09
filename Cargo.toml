@@ -20,5 +20,6 @@ members = [
     "marcos",
     "oop",
     "pattern",
-    "iasync"
+    "iasync",
+    "channel"
 ]
