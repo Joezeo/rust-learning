@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "adder",
+    "binary_heap",
     "closure",
     "collection",
     "concurrency",
