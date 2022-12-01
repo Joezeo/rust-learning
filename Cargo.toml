@@ -19,5 +19,9 @@ members = [
     "rtrait",
     "variable",
     "marcos",
-    "oop"
+    "oop",
+    "pattern",
+    "iasync",
+    "channel",
+    "webserver"
 ]
